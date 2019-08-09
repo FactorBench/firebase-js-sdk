@@ -1,174 +1,236 @@
-# Firebase Javascript SDK
-
-<!-- BADGES -->
 [![Build Status](https://travis-ci.org/firebase/firebase-js-sdk.svg?branch=master)](https://travis-ci.org/firebase/firebase-js-sdk)
-[![Build Status](https://saucelabs.com/buildstatus/firebase-oss)](https://saucelabs.com/u/firebase-oss)
-[![Version](https://img.shields.io/npm/v/firebase.svg?label=version)](https://www.npmjs.com/package/firebase)
-[![Coverage Status](https://coveralls.io/repos/github/firebase/firebase-js-sdk/badge.svg?branch=master)](https://coveralls.io/github/firebase/firebase-js-sdk?branch=master)
-<!-- END BADGES -->
 
-The Firebase JavaScript SDK implements the client-side libraries used by
-applications using Firebase services. This SDK is distributed via:
+# Firebase - App success made simple
 
-- CDN (`<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase.js"></script>`)
-- [npm package](https://www.npmjs.com/package/firebase)
-- [Bower package](https://github.com/firebase/firebase-bower)
+## Overview
 
-To get started using Firebase, see
-[Add Firebase to your JavaScript Project](https://firebase.google.com/docs/web/setup).
+[Firebase](https://firebase.google.com) provides the tools and infrastructure
+you need to develop, grow, and earn money from your app. This package supports
+web (browser), mobile-web, and server (Node.js) clients.
 
-[![Release Notes](https://img.shields.io/npm/v/firebase.svg?style=flat-square&label=Release%20Notes%20for&labelColor=039be5&color=666)](https://firebase.google.com/support/release-notes/js)
+For more information, visit:
 
-## Supported Environments
-Please see [Environment Support](https://firebase.google.com/support/guides/environments_js-sdk).
+- [Firebase Realtime Database](https://firebase.google.com/docs/database/web/start) -
+  The Firebase Realtime Database lets you store and query user data, and makes
+  it available between users in realtime.
+- [Cloud Firestore](https://firebase.google.com/docs/firestore/quickstart) -
+  Cloud Firestore is a flexible, scalable database for mobile, web, and server 
+  development from Firebase and Google Cloud Platform.
+- [Firebase Storage](https://firebase.google.com/docs/storage/web/start) -
+  Firebase Storage lets you upload and store user generated content, such as
+  files, and images.
+- [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/js/client) -
+  Firebase Cloud Messaging is a cross-platform messaging solution that lets you
+  reliably deliver messages at no cost.
+- [Firebase Authentication](https://firebase.google.com/docs/auth/web/manage-users) -
+  Firebase helps you authenticate and manage users who access your application.
+- [Create and setup your account](https://firebase.google.com/docs/web/setup) -
+  Get started using Firebase for free.
 
-## SDK Dev Workflow
+This SDK is intended for end-user client access from environments such as the
+Web, mobile Web (e.g. React Native, Ionic), Node.js desktop (e.g. Electron), or
+IoT devices running Node.js. If you are instead interested in using a Node.js
+SDK which grants you admin access from a privileged environment (like a server),
+you should use the
+[Firebase Admin Node.js SDK](https://firebase.google.com/docs/admin/setup/).
 
-### Prerequisites
+## Get the code (browser)
 
-#### Node.js
+### Script include
 
-Before you can start working on the Firebase JS SDK, you need to have Node.js
-installed on your machine. The currently supported versions are `8.13.0` or greater.
+Include Firebase in your web application via a `<script>` tag:
 
-To download Node.js visit https://nodejs.org/en/download/.
+```html
+<script src="https://www.gstatic.com/firebasejs/${JSCORE_VERSION}/firebase.js"></script>
 
-_NOTE: You can use a tool like [`NVM`](https://github.com/creationix/nvm)
-or [`N`](https://github.com/tj/n) to install and manage multiple node versions_
-
-#### Yarn
-
-In addition to Node.js we use `yarn` to facilitate multi package development.
-
-To install `yarn` follow the instructions listed on their website:
-https://yarnpkg.com/en/docs/install
-
-#### Java
-
-The closure compiler requires a modern Java installation. Java 8+ should be installed: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
-
-#### Verify Prerequisites
-
-You can verify your setup by running the following commands in your terminal:
-
-```bash
-$ node -v
-$ yarn -v
-$ java -version
+<script>
+  var app = firebase.initializeApp({
+    apiKey: '<your-api-key>',
+    authDomain: '<your-auth-domain>',
+    databaseURL: '<your-database-url>',
+    projectId: '<your-cloud-firestore-project>',
+    storageBucket: '<your-storage-bucket>',
+    messagingSenderId: '<your-sender-id>'
+  });
+  // ...
+</script>
 ```
 
-Your Node.js version should be `8.0.0` or greater, your `yarn` version should
-be `1.0.0` or greater, and your `java` version should be `1.8.0` or greater.
+*Note: To get a filled in version of the above code snippet, go to the
+[Firebase console](https://console.firebase.google.com/) for your app and click on "Add
+Firebase to your web app".*
 
-_NOTE: We will update the documentation as new versions are required, however
-for continuing development on the SDK, staying up to date on the stable versions
-of these packages is advised_
+### npm bundler (Browserify, Webpack, etc.)
 
-### Install Dependencies
+The Firebase JavaScript npm package contains code that can be run in the browser
+after combining the modules you use with a package bundler (e.g.,
+[Browserify](http://browserify.org/), [Webpack](https://webpack.github.io/)).
 
-Once you have Node.js and `yarn` installed on your machine and have validated
-that you are running the proper version, you can set up the development environment
-by running the following at the root of the SDK:
+Install the Firebase npm module:
 
-```bash
-$ yarn
+```
+$ npm init
+$ npm install --save firebase
 ```
 
-Once you have installed all the dependencies, you can build the entire SDK by
-running the following command the root of the SDK:
+In your code, you can access Firebase using:
 
-```bash
-$ yarn build
+```js
+var firebase = require('firebase');
+var app = firebase.initializeApp({ ... });
 ```
 
-## Testing the SDK
+If you are using ES6 imports or TypeScript:
 
-### Test Setup
-
-A production project is required to test the Firebase JS SDK. You can create a
-new project by visiting the [Firebase Console](https://console.firebase.google.com/).
-
-#### Firestore Support
-
-Visit the database section of the console and enable the Cloud Firestore Beta.
-You can select either of the default permissions settings as we will overwrite
-them below.
-
-#### Authentication Support
-
-Visit the authentication config in your project and enable the `Anonymous`
-sign-in provider to complete your project config.
-
-#### Automated Setup
-
-The remainder of the test setup requires choosing a test project. You can 
-choose the project manually or specify the project directly at the root of 
-the package.
-
-```bash
-# Select a project manually when running setup
-$ yarn test:setup
-
-# Specify the specific project for setup
-$ yarn test:setup --projectId=<your-test-project>
+```js
+import * as firebase from 'firebase';
+var app = firebase.initializeApp({ ... });
 ```
 
-### Running the tests
+### Include only the features you need
 
-Each of the directories in the `integration` directory as well as the `packages`
-directory have their own test suites. You will need to build the SDK before
-running tests. Test suites can be run all together by running the following 
-command at the root of the package:
+The full Firebase JavaScript client includes support for Firebase Authentication, the
+Firebase Realtime Database, Firebase Storage, and Firebase Cloud Messaging. Including
+code via the above snippets will pull in all of these features.
 
-```bash
-$ yarn test
+You can reduce the amount of code your app uses by just including the features
+you need. The individually installable services are:
+
+- `firebase-app` - The core `firebase` client (required).
+- `firebase-auth` - Firebase Authentication (optional).
+- `firebase-database` - The Firebase Realtime Database (optional).
+- `firebase-firestore` - Cloud Firestore (optional).
+- `firebase-storage` - Firebase Storage (optional).
+- `firebase-messaging` - Firebase Cloud Messaging (optional).
+- `firebase-functions` - Firebase Cloud Functions (optional).
+
+From the CDN, include the individual services you use (include `firebase-app`
+first):
+
+```html
+<script src="https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-messaging.js"></script>
+<script src="https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-functions.js"></script>
+
+<script>
+  var app = firebase.initializeApp({ ... });
+  // ...
+</script>
 ```
 
-In addition, you can run any of the tests individually by running `yarn test` in
-an individual package directory.
+When using the firebase npm package, you can `require()` just the services that
+you use:
 
-## Building the SDK
+```js
+var firebase = require('firebase/app');
+require('firebase/auth');
+require('firebase/database');
 
-### Introduction
-
-The Firebase JS SDK is built with a series of individual packages that are all
-contained in this repository. Development is coordinated via [yarn
-workspaces](https://yarnpkg.com/blog/2017/08/02/introducing-workspaces/) and
-[Lerna](https://lernajs.io/) (a monorepo management tool).
-
-Each package in the `packages` directory, constitute a piece of our
-implementation. The SDK is built via a combination of all of these packages
-which are published under the [`firebase`
-scope](https://www.npmjs.com/search?q=scope%3Afirebase) on NPM.
-
-### Helper Scripts
-
-Each package in the `packages` directory exposes a `dev` script. This script
-will set up a watcher for development on the individual piece of the SDK. In
-addition, there is a top level `dev` script that can be run to start all of the
-watch tasks as well as a sandbox server.
-
-You can run the dev script by running the following at the root of the package:
-
-```bash
-$ yarn dev
+var app = firebase.initializeApp({ ... });
 ```
 
-### Prepush Hooks
+If you are using TypeScript with the npm package, you can import just the
+services you use:
 
-As part of this repo, we use the NPM package [`husky`](https://npm.im/husky) to
-implement git hooks. We leverage the prepush hook to do two things:
+```js
+// This import loads the firebase namespace along with all its type information.
+import * as firebase from 'firebase/app';
 
-- Automated code styling (using [`prettier`](https://npm.im/prettier))
-- Automated LICENSE header insertion
+// These imports load individual services into the firebase namespace.
+import 'firebase/auth';
+import 'firebase/database';
+```
 
-## Contributing
+_The type information from the import statement will include all of the SDKs,
+not just the ones you have `required`, so you could get a runtime error if you
+reference a non-required service._
 
-See [Contributing](./CONTRIBUTING.md) for more information on contributing to the Firebase
-JavaScript SDK.
+## Get the code (Node.js - server and command line)
 
-### Big Thanks
+### NPM
 
-Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs][homepage]
+While you can write entire Firebase applications without any backend code, many
+developers want to write server applications or command-line utilities using the
+Node.js JavaScript runtime.
 
-[homepage]: https://saucelabs.com
+You can use the same npm module to use Firebase in the Node.js runtime (on a
+server or running from the command line):
+
+```
+$ npm init
+$ npm install --save firebase
+```
+
+In your code, you can access Firebase using:
+
+```js
+var firebase = require('firebase');
+var app = firebase.initializeApp({ ... });
+// ...
+```
+
+If you are using native ES6 module with --experimental-modules flag, you should do:
+
+```js
+// This import loads the firebase namespace.
+import firebase from 'firebase/app';
+
+// These imports load individual services into the firebase namespace.
+import 'firebase/auth';
+import 'firebase/database';
+```
+
+_Known issue for typescript users with --experimental-modules: you have to set allowSyntheticDefaultImports to true in tsconfig.json to pass the type check. Use it with caution since it makes the assumption that all modules have a default export, which might not be the case for the other dependencies you have. And Your code will break if you try to import the default export from a module that doesn't have default export._
+
+
+Firebase Storage is not included in the server side Firebase npm module.
+Instead, you can use the
+[`google-cloud` Node.js client](https://github.com/GoogleCloudPlatform/google-cloud-node).
+
+```
+$ npm install --save google-cloud
+```
+
+In your code, you can access your Storage bucket using:
+
+```js
+var gcloud = require('google-cloud')({ ... });
+var gcs = gcloud.storage();
+var bucket = gcs.bucket('<your-firebase-storage-bucket>');
+...
+```
+
+Firebase Cloud Messaging is not included in the server side Firebase npm module.
+Instead, you can use the
+[Firebase Cloud Messaging Rest API](https://firebase.google.com/docs/cloud-messaging/send-message).
+
+## API definition
+
+If you use the
+[Closure Compiler](https://developers.google.com/closure/compiler/) or
+compatible IDE, you can find API definitions for all the Firebase JavaScript API
+in the included `/externs` directory in this package:
+
+```
+externs/
+  firebase-app-externs.js
+  firebase-auth-externs.js
+  firebase-database-externs.js
+  firebase-firestore-externs.js
+  firebase-storage-externs.js
+  firebase-messaging-externs.js
+```
+
+## Changelog
+
+The Firebase changelog can be found at
+[firebase.google.com](https://firebase.google.com/support/release-notes/js).
+
+## Browser/environment compatibility
+
+See [ENVIRONMENTS.md](ENVIRONMENTS.md) to see which browsers/environments are
+supported for each feature.
